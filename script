@@ -1,0 +1,47 @@
+#!/bin/bash
+LOGFILE="/tmp/bootstrap.log"
+echo "======Starting-1 funtion ( setting password in sshd_config file )============="  >> ${LOGFILE}
+echo "Dill+Bha31" | passwd --stdin root
+echo "we are assigning the password " >> ${LOGFILE}
+echo "find #PermitRootLogin yes ( in entir config file) and change it to permitRootLogin yes" >> ${LOGFILE}
+sed -i 's/#PermitRootLogin yes/permitRootLogin yes/g' /etc/ssh/sshd_config
+echo "find PasswordAuthentication no ( in entir config file) and change it to PasswordAuthentication yes" >> ${LOGFILE}
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+echo " #Dilanka new sshd_config file " >> /etc/ssh/sshd_config
+echo " we restart the system to have the changers " >> ${LOGFILE}
+systemctl restart sshd.service
+echo " successfully restarted " >> ${LOGFILE}
+echo "======Starting-2 funtion ( installing git in your EC2 )============="  >> ${LOGFILE}
+echo "installing git client" >> ${LOGFILE}
+yum install git -y
+echo "installing git client is completed" >> ${LOGFILE}
+echo "git instalation validation" >> ${LOGFILE}
+git --version >> /tmp/bootstrap.log
+echo "git instalation validation is successfull " >> ${LOGFILE}
+echo "======Starting-3 funtion ( making a git repository in your EC2 )============="  >> ${LOGFILE}
+echo " changing to opt directry" >> ${LOGFILE}
+cd /opt/
+echo " making directry devops " >> ${LOGFILE}
+mkdir devops
+echo " copy sshd_config file in to devops folder" >> ${LOGFILE}
+cp -f /etc/ssh/sshd_config  /opt/devops/
+echo " initiating git " >> ${LOGFILE}
+git init
+echo " add firstgit.txt in to the git " >> ${LOGFILE}
+git add sshd_config
+echo " Now we are going to commit your folder " >> ${LOGFILE}
+git commit -m "file comminted and uploaded "
+echo " now we map our repository to master git location path  " >> ${LOGFILE}
+git remote add origin https://github.com/dillnayana/Devops.git
+echo " push the content in to the master location " >> ${LOGFILE}
+git push -f https://dillnayana:Dill+Bha31@github.com/dillnayana/Devops.git master
+echo "======Starting-4 funtion (installing java )============="  >> ${LOGFILE}
+echo "[NORMAL] Installing Java 1.8....."  >> ${LOGFILE}
+  if yum install -y java-1.8*
+  then
+      echo "[NORMAL] Installing Java 1.8 Completed"  >> ${LOGFILE}
+      java -version >> ${LOGFILE}
+  else
+      echo "[WARNING] Installing Java 1.8 Failed" >> ${LOGFILE}
+  fi
+  
