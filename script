@@ -44,4 +44,18 @@ echo "[NORMAL] Installing Java 1.8....."  >> ${LOGFILE}
   else
       echo "[WARNING] Installing Java 1.8 Failed" >> ${LOGFILE}
   fi
-  
+  #### Function 03 : Jenknings repo configuration & jenkings configuration  ####
+
+echo "==================="  >> ${LOGFILE}
+echo "[NORMAL] Configuring Jenkins repo"  >> ${LOGFILE}
+  if wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+  then
+    if rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+    then
+      echo "[NORMAL] Configuring Jenkins repo Completed"  >> ${LOGFILE}
+    else
+      echo "[WARNING] Jenkins key import Failed"  >> ${LOGFILE}
+    fi
+  else
+    echo "[MAJOR] Configuring Jenkins repo Failed"  >> ${LOGFILE}
+  fi
